@@ -12,7 +12,7 @@ def employee_task():
     todos_api = requests.get(url_todos)
     TASK_TITLE = []
     NUMBER_OF_DONE_TASKS = 0
-    TOTAL_NUMBER_OF_TASKS = 1
+    TOTAL_NUMBER_OF_TASKS = 0
     EMPLOYEE_NAME = ""
     id_employee = int(argv[1])
 
