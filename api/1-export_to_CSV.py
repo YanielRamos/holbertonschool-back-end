@@ -1,46 +1,50 @@
 #!/usr/bin/python3
-"""Script that export data in CSV format"""
+"""Script to export data in the CSV format"""
+from requests import get
 from sys import argv
-import requests
 import csv
 
 
-def employee_info():
-    """function that return info of employee"""
-    USER_ID = int(argv[1])
-    EMPLOYEE_NAME = ""
-    task_obj = []
+def information_employee():
+    """Returns information about employees"""
+    id_employee = int(argv[1])
+    employee_name = ""
+    task_data = []
 
-    url_users = requests.get('https://jsonplaceholder.typicode.com/users')
-    url_todos = requests.get('https://jsonplaceholder.typicode.com/todos')
+    url_users = 'https://jsonplaceholder.typicode.com/users'
+    url_todos = 'https://jsonplaceholder.typicode.com/todos'
 
-    if url_users.status_code == 200 and url_todos.status_code == 200:
-        users_info = url_users.json()
-        todos_info = url_todos.json()
+    response_one = get(url_users)
+    response_two = get(url_todos)
 
-        for user in users_info:
-            if user['id'] == USER_ID:
-                EMPLOYEE_NAME = user['username']
+    if response_one.status_code == 200:
+        response_json_usr = response_one.json()
+        response_json_tod = response_two.json()
 
-                for todo in todos_info:
-                    if todo['userId'] == USER_ID:
-                        task_obj.append(todo)
+        for user in response_json_usr:
+            if (user['id'] == id_employee):
+                employee_name = user['username']
 
-        csv_export(USER_ID, EMPLOYEE_NAME, task_obj)
+                for tod in response_json_tod:
+                    if tod['userId'] == id_employee:
+                        task_data.append(tod)
+
+        # Call the function to export data to CSV
+        export_to_csv(id_employee, employee_name, task_data)
 
 
-def csv_export(USER_ID, EMPLOYEE_NAME, task_obj):
-    """Exports the employee info to csv"""
-    filename = "{}.csv".format(USER_ID)
+def export_to_csv(user_id, employee_name, task_data):
+    """Exports the employee information to a CSV file"""
+    filename = f"{user_id}.csv"
 
     with open(filename, mode='w', newline='') as csvfile:
-        csv_wrt = csv.writer(csvfile, delimiter=',',
-                             quotechar='"', quoting=csv.QUOTE_ALL)
+        csv_writer = csv.writer(csvfile, delimiter=',',
+                                quotechar='"', quoting=csv.QUOTE_ALL)
 
-        for info in task_obj:
-            csv_wrt.writerow(
-                [USER_ID, EMPLOYEE_NAME, info['completed'], info['title']])
+        for task in task_data:
+            csv_writer.writerow(
+                [user_id, employee_name, task['completed'], task['title']])
 
 
-if __name__ == '__main__':
-    employee_info()
+if __name__ == "__main__":
+    information_employee()
