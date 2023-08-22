@@ -20,22 +20,24 @@ def employee_task():
         users = users_api.json()
         todos = todos_api.json()
 
-    for user in users:
-        if user['id'] == id_employee:
-            EMPLOYEE_NAME = user['name']
+        for user in users:
+            if user['id'] == id_employee:
+                EMPLOYEE_NAME = user['name']
 
-            for task in todos:
-                if task['userId'] == id_employee:
-                    TOTAL_NUMBER_OF_TASKS += 1
-                    if task['completed'] is True:
-                        NUMBER_OF_DONE_TASKS += 1
-                        TASK_TITLE.append(task['title'])
+                for task in todos:
+                    if task['userId'] == id_employee:
+                        TOTAL_NUMBER_OF_TASKS += 1
+                        if task['completed'] is True:
+                            NUMBER_OF_DONE_TASKS += 1
+                            TASK_TITLE.append(task['title'])
 
-    print("Employee {} is done with task({}/{}):"
-          .format(EMPLOYEE_NAME, NUMBER_OF_DONE_TASKS, TOTAL_NUMBER_OF_TASKS))
+        print("Employee {} is done with task({}/{}):"
+              .format(EMPLOYEE_NAME, NUMBER_OF_DONE_TASKS,
+                      TOTAL_NUMBER_OF_TASKS))
 
-    for task_printed in TASK_TITLE:
-        print(f"\t {task_printed}")
+        print(TASK_TITLE)
+        for task_printed in TASK_TITLE:
+            print(f"\t {task_printed}")
 
 
 if __name__ == '__main__':
