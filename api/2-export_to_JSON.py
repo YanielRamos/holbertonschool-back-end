@@ -1,34 +1,24 @@
 #!/usr/bin/python3
-"""script that export data to json"""
-from sys import argv
-import requests
-import json
+"""Script to export data i  the JSON format"""
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
+    import json
+    import requests
+    from sys import argv
 
-    user_id = int(argv[1])
-    users_response = requests.get(
-        'https://jsonplaceholder.typicode.com/users/{}'.format(user_id))
-    todos_response = requests.get(
-        'https://jsonplaceholder.typicode.com/todos?userId={}'.format(user_id))
-    employee_name = ''
-
-    if users_response.status_code == 200 and todos_response.status_code == 200:
-        users = users_response.json()
-        todos = todos_response.json()
-
-        if users['id'] == user_id:
-            employee_name = users['username']
-
-        filename = f'{user_id}.json'
-        user_list = {user_id: []}
-
-        for info in todos:
-            dict = {
-                'task': info['title'], 'completed': info['completed'],
-                'username': employee_name}
-            user_list.get(user_id).append(dict)
-
-        with open(filename, 'w', encoding='utf-8') as f:
-            json.dump(user_list, f)
+    u_id = argv[1]
+    api_url = "https://jsonplaceholder.typicode.com/users/{}".format(u_id)
+    api_url2 = "https://jsonplaceholder.typicode.com/todos?userId={}"\
+        .format(u_id)
+    response = requests.get(api_url).json()
+    EMPLOYEE_NAME = response.get('username')
+    response = requests.get(api_url2).json()
+    f_name = u_id + '.json'
+    u_list = {u_id: []}
+    for info in response:
+        dic = {"task": info.get('title'), "completed": info.get('completed'),
+               "username": EMPLOYEE_NAME}
+        u_list.get(u_id).append(dic)
+    with open(f_name, 'w', encoding='utf-8') as f:
+        json.dump(u_list, f)
