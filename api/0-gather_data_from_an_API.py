@@ -31,7 +31,7 @@ def employee_task():
                         NUMBER_OF_DONE_TASKS += 1
                         TASK_TITLE.append(task['title'])
 
-    print("Employee {} is done with task({}/{})"
+    print("Employee {} is done with task({}/{}):"
           .format(EMPLOYEE_NAME, NUMBER_OF_DONE_TASKS, TOTAL_NUMBER_OF_TASKS))
 
     for task_printed in TASK_TITLE:
